@@ -5,12 +5,14 @@ namespace Microsoft.eShopWeb.ApplicationCore.Specifications;
 
 public class CatalogFilterPaginatedSpecification : Specification<CatalogItem>
 {
+    private const int UnlimitedItems = int.MaxValue;
+
     public CatalogFilterPaginatedSpecification(int skip, int take, int? brandId, int? typeId)
         : base()
     {
         if (take == 0)
         {
-            take = int.MaxValue;
+            take = UnlimitedItems;
         }
         Query
             .Where(i => (!brandId.HasValue || i.CatalogBrandId == brandId) &&

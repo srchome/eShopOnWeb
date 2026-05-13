@@ -62,7 +62,7 @@ public class CatalogItemService : ICatalogItemService
 
         var brandListTask = _brandService.List();
         var typeListTask = _typeService.List();
-        var itemListTask = _httpService.HttpGet<PagedCatalogItemResponse>($"catalog-items?PageSize=10");
+        var itemListTask = _httpService.HttpGet<PagedCatalogItemResponse>($"catalog-items?PageSize={pageSize}");
         await Task.WhenAll(brandListTask, typeListTask, itemListTask);
         var brands = brandListTask.Result;
         var types = typeListTask.Result;

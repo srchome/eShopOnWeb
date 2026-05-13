@@ -14,7 +14,7 @@
         <article class="esh-pager-wrapper row">
             <nav>
                 <div class="col-md-2 col-xs-12">
-                    <a class="esh-pager-item-left esh-pager-item--navigable esh-pager-item @Model.Previous"
+                    <a class="esh-pager-item-left esh-pager-item--navigable esh-pager-item @(Model.HasPreviousPage ? "" : "is-disabled")"
                        id="Previous"
                        asp-all-route-data="prevRouteData"
                        aria-label="Previous">
@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="col-md-2 col-xs-12">
-                    <a class="esh-pager-item-right esh-pager-item--navigable esh-pager-item @Model.Next"
+                    <a class="esh-pager-item-right esh-pager-item--navigable esh-pager-item @(Model.HasNextPage ? "" : "is-disabled")"
                        id="Next"
                        asp-all-route-data="nextRouteData"
                        aria-label="Next">
