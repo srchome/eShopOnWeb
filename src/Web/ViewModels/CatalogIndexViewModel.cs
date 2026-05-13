@@ -10,4 +10,6 @@ public class CatalogIndexViewModel
     public int? BrandFilterApplied { get; set; }
     public int? TypesFilterApplied { get; set; }
     public PaginationInfoViewModel? PaginationInfo { get; set; }
+    public List<CatalogItemViewModel> RecommendedItems { get; set; } = new();
+    public string? SearchQuery { get; set; }
 }

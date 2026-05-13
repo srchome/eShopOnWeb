@@ -1,9 +1,11 @@
-﻿using System.Net.Mime;
+using System;
+using System.Net.Mime;
+using System.Threading.Tasks;
 using Ardalis.ListStartupServices;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.eShopWeb.Infrastructure.Data;
-using Microsoft.eShopWeb.Infrastructure.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NimblePros.Metronome;
 
@@ -16,16 +18,9 @@ public static class WebApplicationExtensions
         app.Logger.LogInformation("Seeding Database...");
 
         using var scope = app.Services.CreateScope();
-        var scopedProvider = scope.ServiceProvider;
         try
         {
-            var catalogContext = scopedProvider.GetRequiredService<CatalogContext>();
-            await CatalogContextSeed.SeedAsync(catalogContext, app.Logger);
-
-            var userManager = scopedProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var roleManager = scopedProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var identityContext = scopedProvider.GetRequiredService<AppIdentityDbContext>();
-            await AppIdentityDbContextSeed.SeedAsync(identityContext, userManager, roleManager);
+            await DatabaseSeeder.SeedAsync(scope.ServiceProvider, app.Logger);
         }
         catch (Exception ex)
         {

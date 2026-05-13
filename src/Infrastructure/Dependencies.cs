@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.Infrastructure.Identity;
+using Microsoft.eShopWeb.Infrastructure.Services;
+using Microsoft.eShopWeb.Infrastructure.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NimblePros.Metronome;
@@ -9,6 +12,13 @@ namespace Microsoft.eShopWeb.Infrastructure;
 
 public static class Dependencies
 {
+    public static void AddAIServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<OpenAISettings>(configuration.GetSection("OpenAI"));
+        services.AddScoped<IEmbeddingService, OpenAIEmbeddingService>();
+        services.AddScoped<ICatalogSearchService, CatalogSearchService>();
+    }
+
     public static void ConfigureLocalDatabaseContexts(this IServiceCollection services, IConfiguration configuration)
     {
         bool useOnlyInMemoryDatabase = false;

@@ -14,7 +14,7 @@ This document outlines a phased approach to integrate AI components into the eSh
 **Problem Solved:** Customers struggle to find products; generic search results don't match intent
 
 **Solution:**
-- Implement semantic search using Azure OpenAI Embeddings
+- Implement semantic search using OpenAI Embeddings
 - Show "You might also like" recommendations based on browsing history
 - Personalized product suggestions on homepage
 

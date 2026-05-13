@@ -10,7 +10,74 @@
 
 .esh-catalog-filters {
   background-color: #00A69C;
-  height: 65px; }
+  height: auto;
+  min-height: 65px;
+  padding: 11px 0; }
+
+.esh-catalog-search-form {
+  display: flex;
+  align-items: stretch;
+  max-width: 680px;
+  width: 100%; }
+
+.esh-catalog-search-wrapper {
+  display: flex;
+  align-items: stretch;
+  background: #ffffff;
+  border-radius: 4px;
+  flex: 1;
+  overflow: hidden; }
+
+.esh-catalog-search-input {
+  background: transparent;
+  border: none;
+  color: #333333;
+  flex: 1;
+  font-family: Montserrat, sans-serif;
+  font-size: 0.9rem;
+  min-width: 0;
+  outline: none;
+  padding: 0 14px;
+  height: 42px; }
+
+.esh-catalog-search-input::placeholder {
+  color: #999999; }
+
+.esh-catalog-search-input:focus {
+  background: #f7fffe; }
+
+.esh-catalog-search-btn {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #83D01B;
+  border: none;
+  border-radius: 0;
+  color: #ffffff;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: Montserrat, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  height: 42px;
+  letter-spacing: 0.04em;
+  padding: 0 22px;
+  transition: background 0.2s;
+  white-space: nowrap; }
+
+.esh-catalog-search-btn:hover {
+  background: #5a9c12; }
+
+.esh-catalog-search-results-label {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.83rem;
+  margin: 7px 2px 0 2px; }
+
+.esh-catalog-search-results-label a {
+  color: #ffffff;
+  text-decoration: underline; }
+
+.esh-catalog-search-results-label a:hover {
+  color: #d4f090; }
 
 .esh-catalog-filter {
   -webkit-appearance: none;

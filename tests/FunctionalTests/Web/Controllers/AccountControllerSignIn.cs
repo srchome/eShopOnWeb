@@ -28,14 +28,14 @@ public class AccountControllerSignIn : IClassFixture<TestApplication>
         Assert.Contains("demouser@microsoft.com", stringResponse);
     }
 
+    private const string RequestVerificationTokenPattern =
+        @"name=""__RequestVerificationToken"" type=""hidden"" value=""([-A-Za-z0-9+=/\\_]+?)""";
+
     [Fact]
     public void RegexMatchesValidRequestVerificationToken()
     {
-        // TODO: Move to a unit test
-        // TODO: Move regex to a constant in test project
         var input = @"<input name=""__RequestVerificationToken"" type=""hidden"" value=""CfDJ8Obhlq65OzlDkoBvsSX0tgxFUkIZ_qDDSt49D_StnYwphIyXO4zxfjopCWsygfOkngsL6P0tPmS2HTB1oYW-p_JzE0_MCFb7tF9Ol_qoOg_IC_yTjBNChF0qRgoZPmKYOIJigg7e2rsBsmMZDTdbnGo"" /><input name=""RememberMe"" type=""hidden"" value=""false"" /></form>";
-        string regexpression = @"name=""__RequestVerificationToken"" type=""hidden"" value=""([-A-Za-z0-9+=/\\_]+?)""";
-        var regex = new Regex(regexpression);
+        var regex = new Regex(RequestVerificationTokenPattern);
         var match = regex.Match(input);
         var group = match.Groups.Values.LastOrDefault();
         Assert.NotNull(group);

@@ -1,4 +1,4 @@
-﻿@page
+@page
 @{
     ViewData["Title"] = "Catalog";
     @model IndexModel
@@ -10,21 +10,32 @@
 </section>
 <section class="esh-catalog-filters">
     <div class="container">
-        <form method="get">
-            <label class="esh-catalog-label" data-title="brand">
-                <select asp-for="@Model.CatalogModel.BrandFilterApplied" asp-items="@Model.CatalogModel.Brands" class="esh-catalog-filter"></select>
-            </label>
-            <label class="esh-catalog-label" data-title="type">
-                <select asp-for="@Model.CatalogModel.TypesFilterApplied" asp-items="@Model.CatalogModel.Types" class="esh-catalog-filter"></select>
-            </label>
-            <input class="esh-catalog-send" type="image" src="~/images/arrow-right.svg" />
+        <form method="get" class="esh-catalog-search-form">
+            <div class="esh-catalog-search-wrapper">
+                <input class="esh-catalog-search-input"
+                       type="search"
+                       name="q"
+                       value="@Model.CatalogModel.SearchQuery"
+                       placeholder="Search with AI (e.g. blue .NET shirt, cosy winter hoodie)..." />
+                <button class="esh-catalog-search-btn" type="submit">Search</button>
+            </div>
         </form>
+        @if (!string.IsNullOrEmpty(Model.CatalogModel.SearchQuery))
+        {
+            <p class="esh-catalog-search-results-label">
+                @Model.CatalogModel.CatalogItems.Count AI-matched result(s) for &ldquo;<strong>@Model.CatalogModel.SearchQuery</strong>&rdquo;
+                &mdash; <a href="/">Clear search</a>
+            </p>
+        }
     </div>
 </section>
 <div class="container">
     @if (Model.CatalogModel.CatalogItems.Any())
     {
-        <partial name="_pagination" for="CatalogModel.PaginationInfo" />
+        @if (Model.CatalogModel.PaginationInfo != null)
+        {
+            <partial name="_pagination" for="CatalogModel.PaginationInfo" />
+        }
 
         <div class="esh-catalog-items row">
             @foreach (var catalogItem in Model.CatalogModel.CatalogItems)
@@ -34,7 +45,11 @@
                 </div>
             }
         </div>
-        <partial name="_pagination" for="CatalogModel.PaginationInfo" />
+
+        @if (Model.CatalogModel.PaginationInfo != null)
+        {
+            <partial name="_pagination" for="CatalogModel.PaginationInfo" />
+        }
     }
     else
     {
@@ -43,3 +58,8 @@
         </div>
     }
 </div>
+
+@if (Model.CatalogModel.RecommendedItems.Any())
+{
+    <partial name="_recommendations" model="@Model.CatalogModel.RecommendedItems" />
+}
