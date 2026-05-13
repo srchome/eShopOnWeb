@@ -122,7 +122,10 @@ app.UseRouting();
 
 app.UseCors(CORS_POLICY);
 
-app.UseRateLimiter();
+if (app.Environment.EnvironmentName != "Testing")
+{
+    app.UseRateLimiter();
+}
 
 app.UseAuthorization();
 
