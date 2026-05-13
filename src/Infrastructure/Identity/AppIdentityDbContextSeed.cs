@@ -15,8 +15,8 @@ public class AppIdentityDbContextSeed
             identityDbContext.Database.Migrate();
         }
 
-        await roleManager.CreateAsync(new IdentityRole(BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS));
-        await roleManager.CreateAsync(new IdentityRole(BlazorShared.Authorization.Constants.Roles.PRODUCT_MANAGERS));
+        await roleManager.CreateAsync(new IdentityRole(Roles.ADMINISTRATORS));
+        await roleManager.CreateAsync(new IdentityRole(Roles.PRODUCT_MANAGERS));
 
         var defaultUser = new ApplicationUser { UserName = "demouser@microsoft.com", Email = "demouser@microsoft.com" };
         await userManager.CreateAsync(defaultUser, AuthorizationConstants.DEFAULT_PASSWORD);
@@ -26,7 +26,7 @@ public class AppIdentityDbContextSeed
         productManager = await userManager.FindByNameAsync(productManager.UserName);
         if (productManager != null)
         {
-            await userManager.AddToRoleAsync(productManager, BlazorShared.Authorization.Constants.Roles.PRODUCT_MANAGERS);
+            await userManager.AddToRoleAsync(productManager, Roles.PRODUCT_MANAGERS);
         }
 
         string adminUserName = "admin@microsoft.com";
@@ -35,7 +35,7 @@ public class AppIdentityDbContextSeed
         adminUser = await userManager.FindByNameAsync(adminUserName);
         if (adminUser != null)
         {
-            await userManager.AddToRoleAsync(adminUser, BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS);
+            await userManager.AddToRoleAsync(adminUser, Roles.ADMINISTRATORS);
         }
     }
 }

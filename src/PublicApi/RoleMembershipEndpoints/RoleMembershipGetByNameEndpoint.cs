@@ -15,7 +15,7 @@ public class RoleMembershipGetByNameEndpoint(UserManager<ApplicationUser> userMa
     public override void Configure()
     {
         Get("api/roles/{roleName}/members");
-        Roles(BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS);
+        Roles(ApplicationCore.Constants.Roles.ADMINISTRATORS);
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Description(d =>
             d.Produces<GetRoleMembershipResponse>()

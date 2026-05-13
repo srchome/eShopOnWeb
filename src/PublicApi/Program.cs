@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.RateLimiting;
 using BlazorShared;
 using DotNetEnv;
 using FastEndpoints;
@@ -61,6 +62,23 @@ builder.Services.AddCustomServices(builder.Configuration);
 
 builder.Services.AddMemoryCache();
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = 429;
+    options.AddPolicy("api", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.User.Identity?.Name
+                          ?? httpContext.Connection.RemoteIpAddress?.ToString()
+                          ?? "anonymous",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+});
+
 builder.Services.AddJwtAuthentication();
 
 const string CORS_POLICY = "CorsPolicy";
@@ -104,9 +122,14 @@ app.UseRouting();
 
 app.UseCors(CORS_POLICY);
 
+app.UseRateLimiter();
+
 app.UseAuthorization();
 
-app.UseFastEndpoints();
+app.UseFastEndpoints(c =>
+{
+    c.Endpoints.Configurator = ep => ep.Options(o => o.RequireRateLimiting("api"));
+});
 
 app.UseSwaggerGen();
 

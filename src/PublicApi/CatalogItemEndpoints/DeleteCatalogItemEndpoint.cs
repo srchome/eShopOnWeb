@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
+using Microsoft.eShopWeb.ApplicationCore.Constants;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 
 namespace Microsoft.eShopWeb.PublicApi.CatalogItemEndpoints;
@@ -17,7 +18,7 @@ public class DeleteCatalogItemEndpoint(IRepository<CatalogItem> itemRepository) 
     public override void Configure()
     {
         Delete("api/catalog-items/{catalogItemId}");
-        Roles(BlazorShared.Authorization.Constants.Roles.PRODUCT_MANAGERS);
+        Roles(ApplicationCore.Constants.Roles.PRODUCT_MANAGERS);
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Description(d =>
         {

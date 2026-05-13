@@ -14,7 +14,7 @@ public class DeleteUserEndpoint(UserManager<ApplicationUser> userManager) : Endp
     public override void Configure()
     {
         Delete("api/users/{userId}");
-        Roles(BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS);
+        Roles(ApplicationCore.Constants.Roles.ADMINISTRATORS);
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Description(d =>
         {

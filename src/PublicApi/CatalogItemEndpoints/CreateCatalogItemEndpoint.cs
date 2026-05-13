@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
 using Microsoft.eShopWeb.ApplicationCore.Exceptions;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
+using Microsoft.eShopWeb.ApplicationCore.Constants;
 using Microsoft.eShopWeb.ApplicationCore.Specifications;
 
 namespace Microsoft.eShopWeb.PublicApi.CatalogItemEndpoints;
@@ -19,7 +20,7 @@ public class CreateCatalogItemEndpoint(IRepository<CatalogItem> itemRepository, 
     public override void Configure()
     {
         Post("api/catalog-items");
-        Roles(BlazorShared.Authorization.Constants.Roles.PRODUCT_MANAGERS);
+        Roles(ApplicationCore.Constants.Roles.PRODUCT_MANAGERS);
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Description(d =>
             d.Produces<CreateCatalogItemResponse>()

@@ -16,7 +16,7 @@ public class UserGetByIdEndpoint (UserManager<ApplicationUser> userManager) : En
     public override void Configure()
     {
         Get("api/users/{userId}");
-        Roles(BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS);
+        Roles(ApplicationCore.Constants.Roles.ADMINISTRATORS);
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Description(d =>
             d.Produces<GetUserResponse>()

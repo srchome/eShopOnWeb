@@ -16,7 +16,7 @@ public class UserListEndpoint(UserManager<ApplicationUser> userManager):Endpoint
     public override void Configure()
     {
         Get("api/users");
-        Roles(BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS);
+        Roles(ApplicationCore.Constants.Roles.ADMINISTRATORS);
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Description(d => d.Produces<UserListResponse>()
         .WithTags("UserManagementEndpoints"));

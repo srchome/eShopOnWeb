@@ -89,7 +89,9 @@ builder.Services.AddScoped<ITokenClaimsService, IdentityTokenClaimService>();
 builder.Services.AddCoreServices(builder.Configuration);
 builder.Services.AddWebServices(builder.Configuration);
 
-// Add memory cache services
+// Distributed cache: memory-backed locally, swap for Redis in production via
+// services.AddStackExchangeRedisCache(...) with a "Redis" connection string
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddMemoryCache();
 builder.Services.AddRouting(options =>
 {

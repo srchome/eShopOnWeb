@@ -54,10 +54,11 @@ public class BasketViewModelService : IBasketViewModelService
     {
         var catalogItemsSpecification = new CatalogItemsSpecification(basketItems.Select(b => b.CatalogItemId).ToArray());
         var catalogItems = await _itemRepository.ListAsync(catalogItemsSpecification);
+        var catalogItemsById = catalogItems.ToDictionary(c => c.Id);
 
         var items = basketItems.Select(basketItem =>
         {
-            var catalogItem = catalogItems.First(c => c.Id == basketItem.CatalogItemId);
+            var catalogItem = catalogItemsById[basketItem.CatalogItemId];
 
             var basketItemViewModel = new BasketItemViewModel
             {

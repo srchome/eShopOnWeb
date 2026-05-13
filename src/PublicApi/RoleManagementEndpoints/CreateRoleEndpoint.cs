@@ -14,7 +14,7 @@ public class CreateRoleEndpoint(RoleManager<IdentityRole> roleManager) : Endpoin
     public override void Configure()
     {
         Post("api/roles");
-        Roles(BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS);
+        Roles(ApplicationCore.Constants.Roles.ADMINISTRATORS);
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Description(d =>
             d.Produces<CreateRoleResponse>()

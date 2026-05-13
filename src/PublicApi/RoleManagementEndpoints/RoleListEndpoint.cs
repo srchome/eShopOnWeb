@@ -14,7 +14,7 @@ public class RoleListEndpoint(RoleManager<IdentityRole> roleManager):EndpointWit
     public override void Configure()
     {
         Get("api/roles");
-        Roles(BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS);
+        Roles(ApplicationCore.Constants.Roles.ADMINISTRATORS);
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Description(d => d.Produces<RoleListResponse>()
         .WithTags("RoleManagementEndpoints"));

@@ -15,7 +15,7 @@ public class UpdateRoleEndpoint(UserManager<ApplicationUser> userManager) : Endp
     public override void Configure()
     {
         Put("api/users");
-        Roles(BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS);
+        Roles(ApplicationCore.Constants.Roles.ADMINISTRATORS);
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Description(d =>
             d.Produces<UpdateUserResponse>()

@@ -1,17 +1,16 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Microsoft.eShopWeb.Web.Configuration;
 
-//TODO : replace IMemoryCache with a distributed cache if you are in multi-host scenario
 public class RevokeAuthenticationEvents : CookieAuthenticationEvents
 {
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCache _cache;
     private readonly ILogger _logger;
 
-    public RevokeAuthenticationEvents(IMemoryCache cache, ILogger<RevokeAuthenticationEvents> logger)
+    public RevokeAuthenticationEvents(IDistributedCache cache, ILogger<RevokeAuthenticationEvents> logger)
     {
         _cache = cache;
         _logger = logger;
@@ -22,9 +21,12 @@ public class RevokeAuthenticationEvents : CookieAuthenticationEvents
         var userId = context.Principal?.Claims.First(c => c.Type == ClaimTypes.Name);
         var identityKey = context.Request.Cookies[ConfigureCookieSettings.IdentifierCookieName];
 
-        if (_cache.TryGetValue($"{userId?.Value}:{identityKey}", out var revokeKeys))
+        var cacheKey = $"{userId?.Value}:{identityKey}";
+        var revokedEntry = await _cache.GetStringAsync(cacheKey);
+
+        if (revokedEntry != null)
         {
-            _logger.LogDebug($"Access has been revoked for: {userId?.Value}.");
+            _logger.LogDebug("Access has been revoked for: {UserId}.", userId?.Value);
             context.RejectPrincipal();
             await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
