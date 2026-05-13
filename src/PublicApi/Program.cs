@@ -1,8 +1,12 @@
-﻿using BlazorShared;
+﻿using System;
+using System.IO;
+using BlazorShared;
+using DotNetEnv;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.eShopWeb.ApplicationCore.Constants;
 using Microsoft.eShopWeb.Infrastructure;
 using Microsoft.eShopWeb.Infrastructure.Identity;
 using Microsoft.eShopWeb.PublicApi;
@@ -15,6 +19,28 @@ using Microsoft.Extensions.Logging;
 using NimblePros.Metronome;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load .env file for local development
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+if (File.Exists(envPath))
+{
+    Env.Load(envPath);
+}
+
+builder.Configuration
+    .AddEnvironmentVariables()
+    .AddUserSecrets<Program>(optional: true);
+
+// Set authorization secrets before service registration
+var jwtSecret = builder.Configuration["AuthorizationConstants:JWT_SECRET_KEY"]
+    ?? "test-jwt-secret-key-minimum-32-characters-long";
+
+if (string.IsNullOrEmpty(builder.Configuration["AuthorizationConstants:JWT_SECRET_KEY"]) && !builder.Environment.IsDevelopment() && builder.Environment.EnvironmentName != "Testing")
+{
+    throw new InvalidOperationException("AuthorizationConstants:JWT_SECRET_KEY not configured. Check your .env file.");
+}
+
+AuthorizationConstants.JWT_SECRET_KEY = jwtSecret;
 
 // Add service defaults & Aspire components.
 builder.AddAspireServiceDefaults();

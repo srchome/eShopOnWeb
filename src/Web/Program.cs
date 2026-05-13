@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.eShopWeb.ApplicationCore.Constants;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.Infrastructure.Identity;
 using Microsoft.eShopWeb.Web;
@@ -9,8 +10,44 @@ using Microsoft.eShopWeb.Web.Areas.Identity.Helpers;
 using Microsoft.eShopWeb.Web.Configuration;
 using Microsoft.eShopWeb.Web.Extensions;
 using NimblePros.Metronome;
+using DotNetEnv;
+
+// Load .env file for local development
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+if (File.Exists(envPath))
+{
+    DotNetEnv.Env.Load(envPath);
+}
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuration includes: appsettings.json, environment variables, user secrets
+builder.Configuration
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
+    .AddUserSecrets<Program>(optional: true);
+
+// Validate and set authorization secrets
+var authKey = builder.Configuration["AuthorizationConstants:AUTH_KEY"] 
+    ?? "test-auth-key-minimum-32-characters-long";
+var jwtSecret = builder.Configuration["AuthorizationConstants:JWT_SECRET_KEY"] 
+    ?? "test-jwt-secret-key-minimum-32-characters-long";
+
+// Only throw in production; Development and Testing environments use defaults
+if (string.IsNullOrEmpty(builder.Configuration["AuthorizationConstants:AUTH_KEY"]) && !builder.Environment.IsDevelopment() && builder.Environment.EnvironmentName != "Testing")
+{
+    throw new InvalidOperationException("AuthorizationConstants:AUTH_KEY not configured. Check your .env file.");
+}
+
+if (string.IsNullOrEmpty(builder.Configuration["AuthorizationConstants:JWT_SECRET_KEY"]) && !builder.Environment.IsDevelopment() && builder.Environment.EnvironmentName != "Testing")
+{
+    throw new InvalidOperationException("AuthorizationConstants:JWT_SECRET_KEY not configured. Check your .env file.");
+}
+
+AuthorizationConstants.AUTH_KEY = authKey;
+AuthorizationConstants.JWT_SECRET_KEY = jwtSecret;
+
+Console.WriteLine("✅ Authorization secrets loaded from configuration");
 
 // Add service defaults & Aspire components.
 builder.AddAspireServiceDefaults();
@@ -38,7 +75,7 @@ if (!string.IsNullOrEmpty(gitHubClientId))
             options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
             options.TokenEndpoint = "https://github.com/login/oauth/access_token";
             options.UserInformationEndpoint = "https://api.github.com/user";
-            options.UsePkce = false; // PKCE not supported by GitHub       
+            options.UsePkce = true; // PKCE now supported by GitHub       
             options.SaveTokens = true;
             options.ClaimsIssuer = "GitHub";
             options.Events = new Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents

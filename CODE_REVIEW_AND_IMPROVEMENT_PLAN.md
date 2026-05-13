@@ -715,11 +715,11 @@ Use boolean properties instead.
 ### Sprint 1 (Immediate - This Week)
 **Focus:** Fix Critical Security Issues
 
-- [ ] Move hardcoded secrets to configuration
-- [ ] Remove artificial 1-second delay
-- [ ] Fix exception handling to not expose details
-- [ ] Add input validation to API endpoints
-- [ ] Enable PKCE for GitHub OAuth
+- [x] Move hardcoded secrets to configuration
+- [x] Remove artificial 1-second delay
+- [x] Fix exception handling to not expose details
+- [x] Add input validation to API endpoints
+- [x] Enable PKCE for GitHub OAuth
 
 **Estimated Effort:** 8-10 hours  
 **Risk:** Low - These are straightforward fixes

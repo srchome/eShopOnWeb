@@ -1,6 +1,8 @@
 version: '3.4'
 services:
  eshopwebmvc:
+   env_file:
+     - .env
    environment:
      - ASPNETCORE_ENVIRONMENT=Docker
      - ASPNETCORE_URLS=http://+:8080
@@ -10,6 +12,8 @@ services:
      - ~/.aspnet/https:/root/.aspnet/https:ro
      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
  eshoppublicapi:
+   env_file:
+     - .env
    environment:
      - ASPNETCORE_ENVIRONMENT=Docker
      - ASPNETCORE_URLS=http://+:8080

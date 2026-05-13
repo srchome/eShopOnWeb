@@ -22,7 +22,6 @@ public class RoleListEndpoint(RoleManager<IdentityRole> roleManager):EndpointWit
 
     public override async Task<RoleListResponse> ExecuteAsync(CancellationToken ct)
     {
-        await Task.Delay(1000, ct);
         var response = new RoleListResponse();
         response.Roles = roleManager.Roles.ToList();
         return response;
