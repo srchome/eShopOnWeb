@@ -22,8 +22,7 @@ public class BasketService : IBasketService
 
     public async Task<Basket> AddItemToBasket(string username, int catalogItemId, decimal price, int quantity = 1)
     {
-        var basketSpec = new BasketWithItemsSpecification(username);
-        var basket = await _basketRepository.FirstOrDefaultAsync(basketSpec);
+        var basket = await GetBasketForUserAsync(username);
 
         if (basket == null)
         {
@@ -54,7 +53,7 @@ public class BasketService : IBasketService
         {
             if (quantities.TryGetValue(item.Id.ToString(), out var quantity))
             {
-                if (_logger != null) _logger.LogInformation("Updating quantity of item ID:{id} to {quantity}.",item.Id, quantity);
+                _logger.LogInformation("Updating quantity of item ID:{id} to {quantity}.", item.Id, quantity);
                 item.SetQuantity(quantity);
             }
         }
@@ -65,11 +64,9 @@ public class BasketService : IBasketService
 
     public async Task TransferBasketAsync(string anonymousId, string userName)
     {
-        var anonymousBasketSpec = new BasketWithItemsSpecification(anonymousId);
-        var anonymousBasket = await _basketRepository.FirstOrDefaultAsync(anonymousBasketSpec);
+        var anonymousBasket = await GetBasketForUserAsync(anonymousId);
         if (anonymousBasket == null) return;
-        var userBasketSpec = new BasketWithItemsSpecification(userName);
-        var userBasket = await _basketRepository.FirstOrDefaultAsync(userBasketSpec);
+        var userBasket = await GetBasketForUserAsync(userName);
         if (userBasket == null)
         {
             userBasket = new Basket(userName);
@@ -81,5 +78,11 @@ public class BasketService : IBasketService
         }
         await _basketRepository.UpdateAsync(userBasket);
         await _basketRepository.DeleteAsync(anonymousBasket);
+    }
+
+    private async Task<Basket?> GetBasketForUserAsync(string username)
+    {
+        var spec = new BasketWithItemsSpecification(username);
+        return await _basketRepository.FirstOrDefaultAsync(spec);
     }
 }
